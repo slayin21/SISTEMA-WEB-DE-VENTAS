@@ -1,0 +1,49 @@
+<app-toast-container></app-toast-container>
+
+<nav class="main-navbar">
+  <div class="nav-container">
+    <a routerLink="/catalogo" class="nav-brand">
+      <span class="brand-logo">👞</span>
+      <span class="brand-name">Zapatería <strong>Joselito</strong></span>
+    </a>
+
+    <div class="nav-links">
+      <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+      <a routerLink="/tendencias" routerLinkActive="active" class="nav-trends-link">🔥 Tendencias</a>
+      
+      <a routerLink="/carrito" routerLinkActive="active" class="nav-cart-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        Carrito
+      </a>
+
+      <!-- Usuario Autenticado -->
+      <ng-container *ngIf="currentUser$ | async as user; else noAuth">
+        <a routerLink="/perfil" routerLinkActive="active" class="nav-user-link">
+          👤 {{ user.nombre }}
+        </a>
+        <a *ngIf="user.rol === 'ADMIN'" routerLink="/admin" routerLinkActive="active" class="nav-admin-btn">
+          ⚙️ Admin
+        </a>
+        <button (click)="logout()" class="nav-logout-btn">Salir</button>
+      </ng-container>
+
+      <!-- Usuario No Autenticado -->
+      <ng-template #noAuth>
+        <a routerLink="/auth/login" class="nav-login-btn">Iniciar Sesión</a>
+        <a routerLink="/auth/register" class="nav-register-btn">Registrarse</a>
+      </ng-template>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="main-footer">
+  <p>© 2026 Zapatería Joselito - Calzado de Alta Calidad. Todos los derechos reservados.</p>
+</footer>

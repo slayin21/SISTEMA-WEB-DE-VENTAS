@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/styles.css"],
+  "sourcesContent": ["@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');\n\n* {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  background-color: #0b0f19;\n  color: #f3f4f6;\n  font-family: 'Outfit', sans-serif;\n  -webkit-font-smoothing: antialiased;\n  min-height: 100vh;\n}\n\n/* Scrollbar estilizada */\n::-webkit-scrollbar {\n  width: 8px;\n  height: 8px;\n}\n\n::-webkit-scrollbar-track {\n  background: #0b0f19;\n}\n\n::-webkit-scrollbar-thumb {\n  background: #1f2937;\n  border-radius: 4px;\n}\n\n::-webkit-scrollbar-thumb:hover {\n  background: #374151;\n}\n"],
+  "mappings": ";;;AAEA;AACE,cAAY;AACZ,UAAQ;AACR,WAAS;AACX;AAEA;AACE,oBAAkB;AAClB,SAAO;AACP,eAAa,QAAQ,EAAE;AACvB,0BAAwB;AACxB,cAAY;AACd;AAGA;AACE,SAAO;AACP,UAAQ;AACV;AAEA;AACE,cAAY;AACd;AAEA;AACE,cAAY;AACZ,iBAAe;AACjB;AAEA,yBAAyB;AACvB,cAAY;AACd;",
+  "names": []
+}

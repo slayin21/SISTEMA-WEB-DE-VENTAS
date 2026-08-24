@@ -1,0 +1,89 @@
+<div class="detail-container">
+  <a routerLink="/catalogo" class="btn-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Volver al Catálogo
+  </a>
+
+  <!-- Loading State -->
+  <div *ngIf="cargando" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando detalle del calzado...</p>
+  </div>
+
+  <div *ngIf="!cargando && producto" class="product-detail-layout">
+    <!-- Galería de Imágenes -->
+    <div class="gallery-section">
+      <div class="main-image">
+        <img [src]="imagenSeleccionada" [alt]="producto.nombre" />
+      </div>
+
+      <div class="thumbnail-list" *ngIf="producto.imagenes && producto.imagenes.length > 1">
+        <div 
+          *ngFor="let img of producto.imagenes" 
+          class="thumb" 
+          [class.active]="img.urlImagen === imagenSeleccionada"
+          (click)="imagenSeleccionada = img.urlImagen">
+          <img [src]="img.urlImagen" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Información del Producto -->
+    <div class="info-section">
+      <div class="brand-tag" *ngIf="producto.marca">{{ producto.marca }}</div>
+      <h1 class="product-name">{{ producto.nombre }}</h1>
+      <p class="category-name">{{ producto.categoria?.nombre }} | Genero: {{ producto.genero || 'Unisex' }}</p>
+
+      <div class="price-box">
+        <span class="price-val">
+          S/ {{ (varianteSeleccionada ? varianteSeleccionada.precio : 0) | number:'1.2-2' }}
+        </span>
+        <span class="stock-badge" [class.out-of-stock]="!varianteSeleccionada || varianteSeleccionada.stock === 0">
+          {{ varianteSeleccionada && varianteSeleccionada.stock > 0 ? (varianteSeleccionada.stock + ' unidades disponibles') : 'Agotado' }}
+        </span>
+      </div>
+
+      <p class="description">{{ producto.descripcion || 'Sin descripción disponible.' }}</p>
+      <p class="material-info" *ngIf="producto.material"><strong>Material:</strong> {{ producto.material }}</p>
+
+      <!-- Selector de Variantes (Talla y Color) -->
+      <div class="variant-selector" *ngIf="producto.variantes && producto.variantes.length > 0">
+        <h3>Selecciona Talla y Color:</h3>
+        <div class="variant-chips">
+          <button 
+            *ngFor="let v of producto.variantes" 
+            [class.selected]="varianteSeleccionada?.idVariante === v.idVariante"
+            [disabled]="v.stock === 0"
+            (click)="seleccionarVariante(v)">
+            <span class="chip-size">Talla {{ v.talla }}</span>
+            <span class="chip-color">{{ v.color }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Control de Cantidad y Botón Añadir -->
+      <div class="purchase-controls" *ngIf="varianteSeleccionada && varianteSeleccionada.stock > 0">
+        <div class="quantity-selector">
+          <button (click)="cantidad = cantidad > 1 ? cantidad - 1 : 1">-</button>
+          <span>{{ cantidad }}</span>
+          <button (click)="cantidad = cantidad < varianteSeleccionada.stock ? cantidad + 1 : cantidad">+</button>
+        </div>
+
+        <button class="btn-add-cart" [disabled]="agregando" (click)="agregarAlCarrito()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          {{ agregando ? 'Añadiendo...' : 'Añadir al Carrito' }}
+        </button>
+      </div>
+
+      <!-- Alertas -->
+      <div *ngIf="mensajeExito" class="alert alert-success">{{ mensajeExito }}</div>
+      <div *ngIf="mensajeError" class="alert alert-danger">{{ mensajeError }}</div>
+    </div>
+  </div>
+</div>

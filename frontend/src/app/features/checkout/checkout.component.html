@@ -1,0 +1,167 @@
+<div class="checkout-container">
+  <!-- Pantalla de Éxito y Boleta Digital cuando se realiza la Venta -->
+  <div *ngIf="ventaRealizada" class="success-screen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
+    <h1>¡Venta Confirmada y Registrada!</h1>
+    <p class="order-id">Número de Pedido: <strong>#ZAP-{{ ventaRealizada.idVenta }}</strong></p>
+    <p>Se ha enviado automáticamente la <strong>Boleta Digital Electrónica</strong> al correo de <strong>{{ ventaRealizada.usuario?.email }}</strong>.</p>
+
+    <!-- Vista de la Boleta Digital Electrónica -->
+    <div class="boleta-digital-card">
+      <div class="boleta-header">
+        <h2>ZAPATERÍA JOSELITO S.A.C.</h2>
+        <p>RUC: 20601234567 | Boleta de Venta Electrónica N° B001-{{ ventaRealizada.idVenta }}</p>
+      </div>
+
+      <div class="boleta-info">
+        <p><strong>Cliente:</strong> {{ ventaRealizada.usuario?.nombre }}</p>
+        <p><strong>Fecha:</strong> {{ ventaRealizada.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Dirección:</strong> {{ ventaRealizada.direccionEnvio }}, {{ ventaRealizada.distritoEnvio }}</p>
+
+        <p><strong>Método de Pago:</strong> {{ ventaRealizada.metodoPago?.nombre || 'Yape/Plin' }}</p>
+      </div>
+
+      <table class="boleta-table">
+        <thead>
+          <tr>
+            <th>Cant.</th>
+            <th>Producto / Variante</th>
+            <th>P. Unit</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of ventaRealizada.detalles">
+            <td>{{ d.cantidad }}</td>
+            <td>{{ d.variante?.producto?.nombre }} (Talla: {{ d.variante?.talla }}, {{ d.variante?.color }})</td>
+            <td>S/ {{ d.precioUnitario | number:'1.2-2' }}</td>
+            <td>S/ {{ d.subtotal | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="boleta-summary">
+        <p>Subtotal: <span>S/ {{ ventaRealizada.subtotal | number:'1.2-2' }}</span></p>
+        <p>IGV (18% Incluido): <span>S/ {{ (ventaRealizada.subtotal || 0) * 0.18 | number:'1.2-2' }}</span></p>
+
+        <p *ngIf="ventaRealizada.descuentoMonto">Descuento Cupón: <span>-S/ {{ ventaRealizada.descuentoMonto | number:'1.2-2' }}</span></p>
+        <p>Costo de Envío: <span>S/ {{ ventaRealizada.costoEnvio | number:'1.2-2' }}</span></p>
+        <h3 class="boleta-total">TOTAL: S/ {{ ((ventaRealizada.subtotal || 0) + (ventaRealizada.costoEnvio || 0) - (ventaRealizada.descuentoMonto || 0)) | number:'1.2-2' }}</h3>
+      </div>
+    </div>
+
+    <div class="success-actions">
+      <button class="btn-secondary" (click)="imprimirBoleta()">🖨️ Imprimir / Guardar Boleta</button>
+
+      <a routerLink="/catalogo" class="btn-primary">Volver al Catálogo</a>
+    </div>
+  </div>
+
+  <!-- Formulario de Checkout -->
+  <div *ngIf="!ventaRealizada" class="checkout-layout">
+    <div class="form-section">
+      <h2>1. Dirección de Entrega</h2>
+      
+      <div class="form-group">
+        <label>Dirección Completa de Envío</label>
+        <input type="text" [(ngModel)]="direccionEnvio" placeholder="Ej: Av. Larco 456, Dpto 201" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Distrito</label>
+          <input type="text" [(ngModel)]="distritoEnvio" placeholder="Ej: Miraflores" />
+        </div>
+
+        <div class="form-group">
+          <label>Agencia de Despacho</label>
+          <select [(ngModel)]="despachadorAgencia">
+            <option value="Shalom / Olva Courier">Shalom / Olva Courier</option>
+            <option value="Delivery Directo Lima">Delivery Directo Lima</option>
+            <option value="Recojo en Tienda">Recojo en Tienda</option>
+          </select>
+        </div>
+      </div>
+
+      <h2>2. Método de Pago</h2>
+      <div class="payment-methods">
+        <label class="payment-option" [class.selected]="idMetodoPago === 1">
+          <input type="radio" name="payment" [value]="1" [(ngModel)]="idMetodoPago" />
+          <span>📱 Yape / Plin</span>
+        </label>
+
+        <label class="payment-option" [class.selected]="idMetodoPago === 2">
+          <input type="radio" name="payment" [value]="2" [(ngModel)]="idMetodoPago" />
+          <span>🏦 Transferencia Bancaria (BCP / BBVA / Interbank)</span>
+        </label>
+
+        <label class="payment-option" [class.selected]="idMetodoPago === 3">
+          <input type="radio" name="payment" [value]="3" [(ngModel)]="idMetodoPago" />
+          <span>💳 Tarjeta de Crédito / Débito (Visa / Mastercard)</span>
+        </label>
+
+        <label class="payment-option" [class.selected]="idMetodoPago === 4">
+          <input type="radio" name="payment" [value]="4" [(ngModel)]="idMetodoPago" />
+          <span>💵 Pago en Efectivo (Contra Entrega / Tienda)</span>
+        </label>
+      </div>
+
+      <h2>3. Cupón de Descuento</h2>
+      <div class="coupon-box">
+        <input type="text" [(ngModel)]="codigoCupon" placeholder="Ingresa código (ej: JOSELITO10)" class="coupon-input" />
+        <button type="button" (click)="aplicarCupon()" class="btn-apply-coupon">Aplicar Cupón</button>
+      </div>
+
+      <div *ngIf="mensajeError" class="alert-error">
+        {{ mensajeError }}
+      </div>
+    </div>
+
+    <!-- Resumen lateral con desglose -->
+    <div class="summary-section">
+      <h2>Desglose Financiero</h2>
+
+      <div class="items-list" *ngIf="carrito && carrito.items">
+        <div class="item-row" *ngFor="let item of carrito.items">
+          <span class="item-name">{{ item.cantidad }}x {{ item.variante?.producto?.nombre }} (Talla {{ item.variante?.talla }})</span>
+          <span class="item-price">S/ {{ ((item.variante?.precio || 0) * item.cantidad) | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="calc-row">
+        <span>Subtotal</span>
+        <span>S/ {{ calcularSubtotal() | number:'1.2-2' }}</span>
+      </div>
+      <div class="calc-row">
+        <span>IGV (18% Incluido)</span>
+        <span>S/ {{ calcularIgv() | number:'1.2-2' }}</span>
+      </div>
+      <div class="calc-row" *ngIf="descuentoAplicado > 0">
+        <span class="text-discount">Descuento Aplicado</span>
+        <span class="text-discount">-S/ {{ descuentoAplicado | number:'1.2-2' }}</span>
+      </div>
+      <div class="calc-row">
+        <span>Costo de Envío</span>
+        <span>S/ {{ calcularEnvio() | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="calc-row total">
+        <span>Total a Pagar</span>
+        <span class="total-price">S/ {{ calcularTotal() | number:'1.2-2' }}</span>
+      </div>
+
+      <button class="btn-confirm" [disabled]="procesando" (click)="confirmarVenta()">
+        {{ procesando ? 'Procesando Venta y Stock...' : 'Confirmar Venta y Generar Boleta' }}
+      </button>
+    </div>
+  </div>
+</div>

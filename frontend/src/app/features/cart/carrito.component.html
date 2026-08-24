@@ -1,0 +1,92 @@
+<div class="cart-container">
+  <h1 class="cart-title">Tu Carrito de Compras</h1>
+
+  <!-- Loading State -->
+  <div *ngIf="cargando" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando elementos de tu carrito...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!cargando && (!carrito || !carrito.items || carrito.items.length === 0)" class="empty-cart">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="20" cy="21" r="1"></circle>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    </svg>
+    <h2>Tu carrito está vacío</h2>
+    <p>Explora nuestras exclusivas colecciones de calzado y añade tus favoritos.</p>
+    <a routerLink="/catalogo" class="btn-primary">Ver Catálogo</a>
+  </div>
+
+  <!-- Cart Content -->
+  <div *ngIf="!cargando && carrito && carrito.items && carrito.items.length > 0" class="cart-grid">
+    <!-- Lista de Items -->
+    <div class="cart-items-section">
+      <div class="section-header">
+        <span>{{ carrito.items.length }} producto(s) en tu carrito</span>
+        <button (click)="vaciarCarrito()" class="btn-clear">Vaciar Carrito</button>
+      </div>
+
+      <div class="cart-item-card" *ngFor="let item of carrito.items">
+        <div class="item-img">
+          <img [src]="item.variante?.producto?.imagenes?.[0]?.urlImagen || 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=600'" />
+        </div>
+
+        <div class="item-details">
+          <h3>{{ item.variante?.producto?.nombre }}</h3>
+          <p class="specs">
+            Talla: <strong>{{ item.variante?.talla }}</strong> | Color: <strong>{{ item.variante?.color }}</strong> | SKU: {{ item.variante?.sku }}
+          </p>
+          <span class="unit-price">Precio unitario: S/ {{ item.variante?.precio | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="item-qty">
+          <span>Cant: {{ item.cantidad }}</span>
+        </div>
+
+        <div class="item-total">
+          <span>S/ {{ ((item.variante?.precio || 0) * item.cantidad) | number:'1.2-2' }}</span>
+        </div>
+
+        <button (click)="eliminarItem(item.idCarritoItem)" class="btn-remove" title="Eliminar del carrito">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Resumen de Orden -->
+    <div class="cart-summary-card">
+      <h2>Resumen del Pedido</h2>
+      
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span>S/ {{ calcularSubtotal() | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="summary-line">
+        <span>Envío estimado</span>
+        <span *ngIf="calcularCostoEnvio() === 0" class="free-shipping">¡GRATIS!</span>
+        <span *ngIf="calcularCostoEnvio() > 0">S/ {{ calcularCostoEnvio() | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="summary-line total-line">
+        <span>Total</span>
+        <span class="total-amount">S/ {{ calcularTotal() | number:'1.2-2' }}</span>
+      </div>
+
+      <a routerLink="/checkout" class="btn-checkout">
+        Proceder al Pago (Checkout)
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
