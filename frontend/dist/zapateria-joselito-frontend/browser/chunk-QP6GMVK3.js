@@ -1,6 +1,6 @@
 import {
   ProductoService
-} from "./chunk-5WVANBFC.js";
+} from "./chunk-7IYHPI4O.js";
 import {
   DefaultValueAccessor,
   FormsModule,
@@ -10,10 +10,10 @@ import {
   NumberValueAccessor,
   SelectControlValueAccessor,
   ɵNgSelectMultipleOption
-} from "./chunk-GNS5ANLM.js";
+} from "./chunk-J5QRST4F.js";
 import {
   RouterLink
-} from "./chunk-NPNYKBRK.js";
+} from "./chunk-M3LPOL3F.js";
 import {
   CommonModule,
   DecimalPipe,
@@ -48,7 +48,7 @@ import {
   ɵɵtwoWayBindingSet,
   ɵɵtwoWayListener,
   ɵɵtwoWayProperty
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/features/catalog/catalogo.component.ts
 var _c0 = (a0) => ["/producto", a0];
@@ -673,4 +673,4 @@ var CatalogoComponent = class _CatalogoComponent {
 export {
   CatalogoComponent
 };
-//# sourceMappingURL=chunk-TSMVVDVO.js.map
+//# sourceMappingURL=chunk-QP6GMVK3.js.map

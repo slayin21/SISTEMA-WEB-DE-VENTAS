@@ -2,7 +2,7 @@ import {
   HttpClient,
   ɵɵdefineInjectable,
   ɵɵinject
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/core/services/venta.service.ts
 var VentaService = class _VentaService {
@@ -40,4 +40,4 @@ var VentaService = class _VentaService {
 export {
   VentaService
 };
-//# sourceMappingURL=chunk-2TXMCEQ5.js.map
+//# sourceMappingURL=chunk-FKKLMHON.js.map

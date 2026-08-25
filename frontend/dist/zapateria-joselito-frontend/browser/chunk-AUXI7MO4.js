@@ -1,18 +1,18 @@
 import {
   NotificationService
-} from "./chunk-COFRIHPA.js";
+} from "./chunk-MRZIMWW3.js";
 import {
   ProductoService
-} from "./chunk-5WVANBFC.js";
+} from "./chunk-7IYHPI4O.js";
 import {
   CarritoService
-} from "./chunk-MWWYMB5K.js";
+} from "./chunk-F7US5IUQ.js";
 import {
   FormsModule
-} from "./chunk-GNS5ANLM.js";
+} from "./chunk-J5QRST4F.js";
 import {
   RouterModule
-} from "./chunk-NPNYKBRK.js";
+} from "./chunk-M3LPOL3F.js";
 import {
   CommonModule,
   DecimalPipe,
@@ -44,7 +44,7 @@ import {
   ɵɵtextInterpolate1,
   ɵɵtextInterpolate2,
   ɵɵtextInterpolate3
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/features/trends/tendencias.component.ts
 function TendenciasComponent_section_4_div_25_button_4_Template(rf, ctx) {
@@ -571,4 +571,4 @@ var TendenciasComponent = class _TendenciasComponent {
 export {
   TendenciasComponent
 };
-//# sourceMappingURL=chunk-2T7W5DNJ.js.map
+//# sourceMappingURL=chunk-AUXI7MO4.js.map

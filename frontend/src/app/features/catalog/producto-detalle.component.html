@@ -13,6 +13,9 @@
   </div>
 
   <div *ngIf="!cargando && producto" class="product-detail-layout">
+    <!-- Botón Prominente de Cierre (X) -->
+    <a routerLink="/catalogo" class="btn-close-detail" title="Cerrar y volver al catálogo">✕</a>
+
     <!-- Galería de Imágenes -->
     <div class="gallery-section">
       <div class="main-image">

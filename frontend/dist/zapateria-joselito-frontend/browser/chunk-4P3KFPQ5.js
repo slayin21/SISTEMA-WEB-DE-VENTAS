@@ -1,6 +1,6 @@
 import {
   AuthService
-} from "./chunk-XN6ZWLTO.js";
+} from "./chunk-BODVM5WY.js";
 import {
   CheckboxControlValueAccessor,
   DefaultValueAccessor,
@@ -11,7 +11,7 @@ import {
   NgModel,
   RequiredValidator,
   ɵNgNoValidate
-} from "./chunk-GNS5ANLM.js";
+} from "./chunk-J5QRST4F.js";
 import {
   CommonModule,
   HttpClient,
@@ -41,7 +41,7 @@ import {
   ɵɵtwoWayBindingSet,
   ɵɵtwoWayListener,
   ɵɵtwoWayProperty
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/core/services/direccion.service.ts
 var DireccionService = class _DireccionService {
@@ -385,4 +385,4 @@ var PerfilComponent = class _PerfilComponent {
 export {
   PerfilComponent
 };
-//# sourceMappingURL=chunk-QIR7YUNK.js.map
+//# sourceMappingURL=chunk-4P3KFPQ5.js.map

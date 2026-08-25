@@ -3,7 +3,7 @@ import {
   HttpParams,
   ɵɵdefineInjectable,
   ɵɵinject
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/core/services/producto.service.ts
 var ProductoService = class _ProductoService {
@@ -63,4 +63,4 @@ var ProductoService = class _ProductoService {
 export {
   ProductoService
 };
-//# sourceMappingURL=chunk-5WVANBFC.js.map
+//# sourceMappingURL=chunk-7IYHPI4O.js.map

@@ -1,7 +1,7 @@
 import {
   BehaviorSubject,
   ɵɵdefineInjectable
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/core/services/notification.service.ts
 var NotificationService = class _NotificationService {
@@ -49,4 +49,4 @@ var NotificationService = class _NotificationService {
 export {
   NotificationService
 };
-//# sourceMappingURL=chunk-COFRIHPA.js.map
+//# sourceMappingURL=chunk-MRZIMWW3.js.map

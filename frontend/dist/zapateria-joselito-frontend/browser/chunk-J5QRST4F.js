@@ -42,7 +42,7 @@ import {
   ɵɵdirectiveInject,
   ɵɵgetInheritedFactory,
   ɵɵlistener
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // node_modules/@angular/forms/fesm2022/forms.mjs
 var BaseControlValueAccessor = class _BaseControlValueAccessor {
@@ -6171,6 +6171,7 @@ export {
   SelectControlValueAccessor,
   NgSelectOption,
   ɵNgSelectMultipleOption,
+  MinValidator,
   RequiredValidator,
   MinLengthValidator,
   MaxLengthValidator,
@@ -6185,4 +6186,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-GNS5ANLM.js.map
+//# sourceMappingURL=chunk-J5QRST4F.js.map

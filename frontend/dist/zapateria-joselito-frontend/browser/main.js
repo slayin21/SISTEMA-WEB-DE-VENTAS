@@ -1,16 +1,16 @@
 import {
   NotificationService
-} from "./chunk-COFRIHPA.js";
+} from "./chunk-MRZIMWW3.js";
 import {
   AuthService
-} from "./chunk-XN6ZWLTO.js";
+} from "./chunk-BODVM5WY.js";
 import {
   Router,
   RouterLink,
   RouterOutlet,
   bootstrapApplication,
   provideRouter
-} from "./chunk-NPNYKBRK.js";
+} from "./chunk-M3LPOL3F.js";
 import {
   AsyncPipe,
   CommonModule,
@@ -45,7 +45,7 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate,
   ɵɵtextInterpolate1
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/core/guards/auth.guard.ts
 var authGuard = () => {
@@ -75,44 +75,44 @@ var routes = [
   { path: "", redirectTo: "catalogo", pathMatch: "full" },
   {
     path: "catalogo",
-    loadComponent: () => import("./chunk-TSMVVDVO.js").then((m) => m.CatalogoComponent)
+    loadComponent: () => import("./chunk-QP6GMVK3.js").then((m) => m.CatalogoComponent)
   },
   {
     path: "tendencias",
-    loadComponent: () => import("./chunk-2T7W5DNJ.js").then((m) => m.TendenciasComponent)
+    loadComponent: () => import("./chunk-AUXI7MO4.js").then((m) => m.TendenciasComponent)
   },
   {
     path: "producto/:id",
-    loadComponent: () => import("./chunk-F7LN6OJW.js").then((m) => m.ProductoDetalleComponent)
+    loadComponent: () => import("./chunk-TOZUDJXV.js").then((m) => m.ProductoDetalleComponent)
   },
   {
     path: "carrito",
-    loadComponent: () => import("./chunk-ST6PGQSQ.js").then((m) => m.CarritoComponent)
+    loadComponent: () => import("./chunk-IETP6I3M.js").then((m) => m.CarritoComponent)
   },
   {
     path: "checkout",
-    loadComponent: () => import("./chunk-G3T6FBTV.js").then((m) => m.CheckoutComponent)
+    loadComponent: () => import("./chunk-BKF7FAMV.js").then((m) => m.CheckoutComponent)
   },
   {
     path: "auth/login",
-    loadComponent: () => import("./chunk-WXYS2ZL6.js").then((m) => m.LoginComponent)
+    loadComponent: () => import("./chunk-TIPSFPHR.js").then((m) => m.LoginComponent)
   },
   {
     path: "auth/register",
-    loadComponent: () => import("./chunk-6G4M53YU.js").then((m) => m.RegisterComponent)
+    loadComponent: () => import("./chunk-DFS5ICGI.js").then((m) => m.RegisterComponent)
   },
   {
     path: "auth/forgot-password",
-    loadComponent: () => import("./chunk-IIMB6KG5.js").then((m) => m.ForgotPasswordComponent)
+    loadComponent: () => import("./chunk-PCGCIBVS.js").then((m) => m.ForgotPasswordComponent)
   },
   {
     path: "perfil",
-    loadComponent: () => import("./chunk-QIR7YUNK.js").then((m) => m.PerfilComponent),
+    loadComponent: () => import("./chunk-4P3KFPQ5.js").then((m) => m.PerfilComponent),
     canActivate: [authGuard]
   },
   {
     path: "admin",
-    loadComponent: () => import("./chunk-VV6DWM6A.js").then((m) => m.AdminDashboardComponent),
+    loadComponent: () => import("./chunk-TUXNYCV5.js").then((m) => m.AdminDashboardComponent),
     canActivate: [adminGuard]
   },
   { path: "**", redirectTo: "catalogo" }

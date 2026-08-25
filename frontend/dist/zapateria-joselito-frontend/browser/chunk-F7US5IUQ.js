@@ -4,7 +4,7 @@ import {
   tap,
   ɵɵdefineInjectable,
   ɵɵinject
-} from "./chunk-LIYF5RMP.js";
+} from "./chunk-EH6AJVCA.js";
 
 // src/app/core/services/carrito.service.ts
 var CarritoService = class _CarritoService {
@@ -41,4 +41,4 @@ var CarritoService = class _CarritoService {
 export {
   CarritoService
 };
-//# sourceMappingURL=chunk-MWWYMB5K.js.map
+//# sourceMappingURL=chunk-F7US5IUQ.js.map

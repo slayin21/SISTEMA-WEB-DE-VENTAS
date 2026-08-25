@@ -19,6 +19,14 @@ export class UsuarioService {
     return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
   }
 
+  crearUsuario(datos: any): Observable<Usuario> {
+    return this.http.post<Usuario>(this.apiUrl, datos);
+  }
+
+  actualizarUsuario(id: number, datos: any): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, datos);
+  }
+
   cambiarRol(id: number, rol: string): Observable<Usuario> {
     return this.http.put<Usuario>(`${this.apiUrl}/${id}/rol`, { rol });
   }

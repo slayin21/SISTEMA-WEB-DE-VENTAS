@@ -250,6 +250,7 @@ import { Producto, Venta, ProductoVariante, Usuario } from '../../core/models';
                 </td>
                 <td>
                   <div class="table-actions">
+                    <button class="btn-icon-btn stock" (click)="gestionarStockProducto(p)" title="Gestionar Stock de Variantes">📦 Stock</button>
                     <button class="btn-icon-btn edit" (click)="editarProducto(p)" title="Editar">✏️ Editar</button>
                     <button class="btn-icon-btn delete" (click)="eliminarProducto(p.idProducto)" title="Eliminar">🗑️ Desactivar</button>
                   </div>
@@ -268,13 +269,18 @@ import { Producto, Venta, ProductoVariante, Usuario } from '../../core/models';
         <div class="pane-header-bar">
           <div>
             <h2>Gestión de Usuarios Registrados</h2>
-            <p class="pane-subtitle">Visualiza, modifica roles (ADMIN / CLIENTE) y administra cuentas de usuarios</p>
+            <p class="pane-subtitle">Visualiza, crea, edita datos de cuenta, modifica roles y administra accesos</p>
           </div>
-          <input 
-            type="text" 
-            [(ngModel)]="searchUsuarios" 
-            placeholder="Buscar usuario por nombre, email o rol..." 
-            class="search-input" />
+          <div class="actions-group">
+            <input 
+              type="text" 
+              [(ngModel)]="searchUsuarios" 
+              placeholder="Buscar usuario por nombre, email o rol..." 
+              class="search-input" />
+            <button class="btn-primary-action" (click)="abrirModalUsuario()">
+              👤 Crear Nuevo Usuario
+            </button>
+          </div>
         </div>
 
         <div class="table-responsive margin-top">
@@ -311,13 +317,16 @@ import { Producto, Venta, ProductoVariante, Usuario } from '../../core/models';
                   <span class="status-pill cancelado" *ngIf="!u.activo">INACTIVO</span>
                 </td>
                 <td>
-                  <button 
-                    class="btn-icon-btn" 
-                    [class.delete]="u.activo" 
-                    [class.edit]="!u.activo" 
-                    (click)="toggleEstadoUsuario(u)">
-                    {{ u.activo ? '🚫 Desactivar' : '✅ Activar Cuenta' }}
-                  </button>
+                  <div class="table-actions">
+                    <button class="btn-icon-btn edit" (click)="editarUsuario(u)" title="Editar datos del usuario">✏️ Editar</button>
+                    <button 
+                      class="btn-icon-btn" 
+                      [class.delete]="u.activo" 
+                      [class.edit]="!u.activo" 
+                      (click)="toggleEstadoUsuario(u)">
+                      {{ u.activo ? '🚫 Desactivar' : '✅ Activar' }}
+                    </button>
+                  </div>
                 </td>
               </tr>
               <tr *ngIf="usuariosFiltrados.length === 0">
@@ -347,14 +356,19 @@ import { Producto, Venta, ProductoVariante, Usuario } from '../../core/models';
 
         <div class="pane-header-bar">
           <div>
-            <h2>Historial de Movimientos Kardex</h2>
-            <p class="pane-subtitle">Registro auditable de entradas, salidas y ajustes de inventario</p>
+            <h2>Historial de Movimientos Kardex & Control de Inventario</h2>
+            <p class="pane-subtitle">Registro auditable de entradas, salidas y ajustes de stock en tiempo real</p>
           </div>
-          <input 
-            type="text" 
-            [(ngModel)]="searchKardex" 
-            placeholder="Buscar en Kardex por producto, tipo u observación..." 
-            class="search-input" />
+          <div class="actions-group">
+            <input 
+              type="text" 
+              [(ngModel)]="searchKardex" 
+              placeholder="Buscar en Kardex por producto, tipo u observación..." 
+              class="search-input" />
+            <button class="btn-emerald-action" (click)="abrirModalMovimientoStock()">
+              ➕ Registrar Entrada / Salida
+            </button>
+          </div>
         </div>
 
         <div class="table-responsive margin-top">
@@ -673,6 +687,229 @@ import { Producto, Venta, ProductoVariante, Usuario } from '../../core/models';
         </form>
       </div>
     </div>
+
+    <!-- MODAL: CREAR / EDITAR USUARIO -->
+    <div *ngIf="mostrarModalUser" class="modal-backdrop" (click)="cerrarModalUsuario()">
+      <div class="modal-card glass-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ editUserId ? '✏️ Editar Datos de Usuario' : '👤 Crear Nuevo Usuario' }}</h3>
+          <button class="btn-close-modal" (click)="cerrarModalUsuario()">✕</button>
+        </div>
+        <form (ngSubmit)="guardarUsuario()" class="modal-form margin-top">
+          <div class="form-grid-2">
+            <div class="form-group span-2">
+              <label>Nombre Completo del Usuario *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="nuevoUsuario.nombre" 
+                name="nombre" 
+                class="form-control" 
+                [class.invalid]="userFormErrors.nombre"
+                placeholder="Ej. Juan Pérez" />
+              <span class="field-error" *ngIf="userFormErrors.nombre">{{ userFormErrors.nombre }}</span>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Correo Electrónico *</label>
+              <input 
+                type="email" 
+                [(ngModel)]="nuevoUsuario.email" 
+                name="email" 
+                class="form-control" 
+                [class.invalid]="userFormErrors.email"
+                placeholder="Ej. usuario@zapateriajoselito.com" />
+              <span class="field-error" *ngIf="userFormErrors.email">{{ userFormErrors.email }}</span>
+            </div>
+
+            <div class="form-group span-2">
+              <label>Contraseña {{ editUserId ? '(Dejar en blanco para mantener contraseña actual)' : '*' }}</label>
+              <input 
+                type="password" 
+                [(ngModel)]="nuevoUsuario.password" 
+                name="password" 
+                class="form-control" 
+                [class.invalid]="userFormErrors.password"
+                placeholder="{{ editUserId ? '•••••••• (Opcional)' : 'Ingresa la contraseña de acceso' }}" />
+              <span class="field-error" *ngIf="userFormErrors.password">{{ userFormErrors.password }}</span>
+            </div>
+
+            <div class="form-group">
+              <label>Rol de Acceso *</label>
+              <select [(ngModel)]="nuevoUsuario.rol" name="rol" class="form-control">
+                <option value="CLIENTE">CLIENTE</option>
+                <option value="ADMIN">ADMINISTRADOR</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Estado de Cuenta</label>
+              <select [(ngModel)]="nuevoUsuario.activo" name="activo" class="form-control">
+                <option [ngValue]="true">ACTIVO</option>
+                <option [ngValue]="false">INACTIVO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer margin-top">
+            <button type="button" class="btn-cancel" (click)="cerrarModalUsuario()">Cancelar</button>
+            <button type="submit" class="btn-save">Guardar Datos de Usuario</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: GESTIÓN DE STOCK POR VARIANTE -->
+    <div *ngIf="mostrarModalStock && productoStockModal" class="modal-backdrop" (click)="cerrarModalStock()">
+      <div class="modal-card glass-modal modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <span class="category-chip">{{ productoStockModal.marca }}</span>
+            <h3>📦 Gestión de Stock e Inventario por Talla / Variante</h3>
+            <p class="field-hint">Producto: <strong>{{ productoStockModal.nombre }}</strong></p>
+          </div>
+          <button class="btn-close-modal" (click)="cerrarModalStock()">✕</button>
+        </div>
+
+        <div class="modal-body margin-top">
+          <h4 class="section-sub">Variantes de Stock Registradas en SQL Server</h4>
+          
+          <div class="table-responsive margin-top-sm">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Talla</th>
+                  <th>Color</th>
+                  <th>SKU</th>
+                  <th>Precio Venta</th>
+                  <th>Stock Actual</th>
+                  <th>Guardar / Ajustar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let varItem of productoStockModal.variantes">
+                  <td><span class="rank-badge">Talla {{ varItem.talla }}</span></td>
+                  <td><strong>{{ varItem.color }}</strong></td>
+                  <td><span class="id-tag">{{ varItem.sku || '-' }}</span></td>
+                  <td>
+                    <input 
+                      type="number" 
+                      [(ngModel)]="varItem.precio" 
+                      class="form-control form-inline" 
+                      style="width: 100px;" />
+                  </td>
+                  <td>
+                    <input 
+                      type="number" 
+                      [(ngModel)]="varItem.stock" 
+                      class="form-control form-inline" 
+                      style="width: 90px;" />
+                  </td>
+                  <td>
+                    <button class="btn-emerald-action btn-sm" (click)="guardarCambiosVariante(varItem)">
+                      💾 Guardar
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="!productoStockModal.variantes || productoStockModal.variantes.length === 0">
+                  <td colspan="6" class="empty-table">Este producto aún no tiene variantes ni stock de tallas registradas.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- FORMULARIO PARA CREAR NUEVA VARIANTE/TALLA -->
+          <div class="new-variant-box margin-top">
+            <h4 class="section-sub">➕ Añadir Nueva Talla / Variante de Stock</h4>
+            <div class="form-grid-4 margin-top-sm">
+              <div class="form-group">
+                <label>Talla *</label>
+                <input type="text" [(ngModel)]="nuevaVarianteForm.talla" placeholder="Ej. 42" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label>Color *</label>
+                <input type="text" [(ngModel)]="nuevaVarianteForm.color" placeholder="Ej. Negro" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label>Stock Inicial *</label>
+                <input type="number" [(ngModel)]="nuevaVarianteForm.stock" placeholder="Ej. 15" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label>Precio S/ *</label>
+                <input type="number" [(ngModel)]="nuevaVarianteForm.precio" placeholder="Ej. 299.00" class="form-control" />
+              </div>
+            </div>
+            <button class="btn-primary-action margin-top-sm" (click)="crearNuevaVariante()">
+              ✨ Agregar Talla y Guardar Stock
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer margin-top">
+          <button type="button" class="btn-cancel" (click)="cerrarModalStock()">Cerrar Ventana</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: REGISTRAR MOVIMIENTO KARDEX DE INVENTARIO -->
+    <div *ngIf="mostrarModalMovStock" class="modal-backdrop" (click)="cerrarModalMovimientoStock()">
+      <div class="modal-card glass-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>➕ Registrar Entrada / Salida de Inventario (Kardex)</h3>
+          <button class="btn-close-modal" (click)="cerrarModalMovimientoStock()">✕</button>
+        </div>
+
+        <form (ngSubmit)="guardarMovimientoStock()" class="modal-form margin-top">
+          <div class="form-grid-2">
+            <div class="form-group span-2">
+              <label>Selecciona Producto y Talla/Variante *</label>
+              <select [(ngModel)]="movimientoForm.idVariante" name="idVariante" class="form-control">
+                <option [ngValue]="null">-- Seleccionar Variante de Calzado --</option>
+                <ng-container *ngFor="let p of productos">
+                  <option *ngFor="let v of p.variantes" [value]="v.idVariante">
+                    {{ p.nombre }} - Talla {{ v.talla }} ({{ v.color }}) | Stock Actual: {{ v.stock }} unid.
+                  </option>
+                </ng-container>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Tipo de Movimiento *</label>
+              <select [(ngModel)]="movimientoForm.tipoMovimiento" name="tipoMovimiento" class="form-control">
+                <option value="ENTRADA_COMPRA">🟢 ENTRADA_COMPRA (Reposición / Importación)</option>
+                <option value="AJUSTE_ENTRADA">🔵 AJUSTE_ENTRADA (Sobrante / Corrección (+))</option>
+                <option value="AJUSTE_SALIDA">🔴 AJUSTE_SALIDA (Merma / Pérdida (-))</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Cantidad de Unidades *</label>
+              <input 
+                type="number" 
+                [(ngModel)]="movimientoForm.cantidad" 
+                name="cantidad" 
+                min="1" 
+                class="form-control" 
+                placeholder="Ej. 10" />
+            </div>
+
+            <div class="form-group span-2">
+              <label>Observación / Motivo del Movimiento</label>
+              <input 
+                type="text" 
+                [(ngModel)]="movimientoForm.observacion" 
+                name="observacion" 
+                class="form-control" 
+                placeholder="Ej. Lote recibido de proveedor / Reposición de almacén" />
+            </div>
+          </div>
+
+          <div class="modal-footer margin-top">
+            <button type="button" class="btn-cancel" (click)="cerrarModalMovimientoStock()">Cancelar</button>
+            <button type="submit" class="btn-save">Registrar Movimiento en Kardex</button>
+          </div>
+        </form>
+      </div>
+    </div>
   `,
   styles: [`
     :host {
@@ -866,6 +1103,13 @@ import { Producto, Venta, ProductoVariante, Usuario } from '../../core/models';
     }
     .btn-icon-btn.edit:hover { background: rgba(99, 102, 241, 0.25); color: #a5b4fc; border-color: rgba(99, 102, 241, 0.4); }
     .btn-icon-btn.delete:hover { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); }
+    .btn-icon-btn.stock:hover { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.4); }
+
+    .glass-modal.modal-lg { max-width: 840px; }
+    .form-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; border-radius: 0.5rem; }
+    .section-sub { font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; }
+    .new-variant-box { background: rgba(31, 41, 55, 0.5); border: 1px dashed rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 0.85rem; }
 
     .status-pill { display: inline-block; padding: 0.3rem 0.75rem; border-radius: 1rem; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
     .status-pill.pendiente { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
@@ -971,6 +1215,18 @@ export class AdminDashboardComponent implements OnInit {
   editProvId: number | null | undefined = null;
   nuevoProveedor: Proveedor = { razonSocial: '', ruc: '', telefono: '', correo: '', direccion: '', estado: 'ACTIVO' };
   provFormErrors: { razonSocial?: string; ruc?: string; telefono?: string; correo?: string } = {};
+
+  mostrarModalUser = false;
+  editUserId: number | null | undefined = null;
+  nuevoUsuario: any = { nombre: '', email: '', password: '', rol: 'CLIENTE', activo: true };
+  userFormErrors: { nombre?: string; email?: string; password?: string } = {};
+
+  mostrarModalStock = false;
+  productoStockModal: Producto | null = null;
+  nuevaVarianteForm: any = { talla: '', color: 'Único', stock: 10, precio: 0 };
+
+  mostrarModalMovStock = false;
+  movimientoForm: any = { idVariante: null, tipoMovimiento: 'ENTRADA_COMPRA', cantidad: 1, observacion: '' };
 
   ejecutandoBackup = false;
   fallbackImage = 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=150';
@@ -1100,6 +1356,172 @@ export class AdminDashboardComponent implements OnInit {
           this.cargarTodo();
         },
         error: () => this.notificationService.showError('No se pudo cambiar el estado de la cuenta')
+      });
+    }
+  }
+
+  // User Modal Actions & Validations
+  abrirModalUsuario() {
+    this.editUserId = null;
+    this.nuevoUsuario = { nombre: '', email: '', password: '', rol: 'CLIENTE', activo: true };
+    this.userFormErrors = {};
+    this.mostrarModalUser = true;
+  }
+
+  // Stock Management Actions & Modals
+  gestionarStockProducto(p: Producto) {
+    this.productoStockModal = p;
+    const precioBase = p.variantes && p.variantes.length > 0 ? p.variantes[0].precio : 250;
+    this.nuevaVarianteForm = { talla: '', color: 'Único', stock: 10, precio: precioBase };
+    this.mostrarModalStock = true;
+  }
+
+  cerrarModalStock() {
+    this.mostrarModalStock = false;
+    this.productoStockModal = null;
+  }
+
+  guardarCambiosVariante(v: ProductoVariante) {
+    if (!v.idVariante) return;
+    this.http.put<any>(`http://localhost:8080/api/v1/admin/inventario/variantes/${v.idVariante}`, v).subscribe({
+      next: () => {
+        this.notificationService.showSuccess(`Stock (Talla ${v.talla}) actualizado a ${v.stock} unidades en SQL Server`);
+        this.cargarTodo();
+      },
+      error: () => this.notificationService.showError('Ocurrió un error al actualizar la variante')
+    });
+  }
+
+  crearNuevaVariante() {
+    if (!this.productoStockModal || !this.productoStockModal.idProducto) return;
+    if (!this.nuevaVarianteForm.talla || !this.nuevaVarianteForm.talla.toString().trim()) {
+      this.notificationService.showError('La talla es requerida');
+      return;
+    }
+
+    const payload = {
+      talla: this.nuevaVarianteForm.talla.toString().trim(),
+      color: (this.nuevaVarianteForm.color || 'Único').trim(),
+      stock: Number(this.nuevaVarianteForm.stock || 0),
+      precio: Number(this.nuevaVarianteForm.precio || 0)
+    };
+
+    this.http.post<any>(`http://localhost:8080/api/v1/admin/inventario/productos/${this.productoStockModal.idProducto}/variantes`, payload).subscribe({
+      next: () => {
+        this.notificationService.showSuccess(`Nueva variante Talla ${payload.talla} agregada con ${payload.stock} unidades de stock`);
+        this.cargarTodo();
+        this.cerrarModalStock();
+      },
+      error: (err) => this.notificationService.showError(err.error?.message || 'Error al agregar variante de stock')
+    });
+  }
+
+  abrirModalMovimientoStock() {
+    this.movimientoForm = { idVariante: null, tipoMovimiento: 'ENTRADA_COMPRA', cantidad: 1, observacion: '' };
+    this.mostrarModalMovStock = true;
+  }
+
+  cerrarModalMovimientoStock() {
+    this.mostrarModalMovStock = false;
+  }
+
+  guardarMovimientoStock() {
+    if (!this.movimientoForm.idVariante) {
+      this.notificationService.showError('Debe seleccionar una variante de producto.');
+      return;
+    }
+    if (!this.movimientoForm.cantidad || this.movimientoForm.cantidad < 1) {
+      this.notificationService.showError('La cantidad debe ser mayor a 0.');
+      return;
+    }
+
+    this.http.post<any>('http://localhost:8080/api/v1/admin/inventario/movimiento', this.movimientoForm).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('Movimiento de inventario registrado con éxito en Kardex y SQL Server');
+        this.cargarTodo();
+        this.cerrarModalMovimientoStock();
+      },
+      error: (err) => this.notificationService.showError(err.error?.message || 'Error al registrar movimiento en Kardex')
+    });
+  }
+
+  cerrarModalUsuario() {
+    this.mostrarModalUser = false;
+    this.userFormErrors = {};
+  }
+
+  editarUsuario(u: Usuario) {
+    this.editUserId = u.idUsuario;
+    this.nuevoUsuario = {
+      nombre: u.nombre,
+      email: u.email,
+      password: '',
+      rol: u.rol || 'CLIENTE',
+      activo: u.activo !== undefined ? u.activo : true
+    };
+    this.userFormErrors = {};
+    this.mostrarModalUser = true;
+  }
+
+  guardarUsuario() {
+    this.userFormErrors = {};
+    let isValid = true;
+
+    if (!this.nuevoUsuario.nombre || !this.nuevoUsuario.nombre.trim()) {
+      this.userFormErrors.nombre = 'El nombre completo es obligatorio.';
+      isValid = false;
+    }
+
+    const emailClean = (this.nuevoUsuario.email || '').trim();
+    if (!emailClean) {
+      this.userFormErrors.email = 'El correo electrónico es obligatorio.';
+      isValid = false;
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailClean)) {
+        this.userFormErrors.email = 'Ingrese un correo electrónico válido.';
+        isValid = false;
+      }
+    }
+
+    if (!this.editUserId && (!this.nuevoUsuario.password || !this.nuevoUsuario.password.trim())) {
+      this.userFormErrors.password = 'La contraseña es obligatoria para nuevos usuarios.';
+      isValid = false;
+    }
+
+    if (!isValid) {
+      this.notificationService.showError('Por favor complete los campos obligatorios del usuario.');
+      return;
+    }
+
+    const payload: any = {
+      nombre: this.nuevoUsuario.nombre.trim(),
+      email: this.nuevoUsuario.email.trim(),
+      rol: this.nuevoUsuario.rol,
+      activo: this.nuevoUsuario.activo
+    };
+
+    if (this.nuevoUsuario.password && this.nuevoUsuario.password.trim()) {
+      payload.password = this.nuevoUsuario.password.trim();
+    }
+
+    if (this.editUserId) {
+      this.usuarioService.actualizarUsuario(this.editUserId, payload).subscribe({
+        next: () => {
+          this.notificationService.showSuccess(`Datos de "${this.nuevoUsuario.nombre}" actualizados correctamente`);
+          this.cargarTodo();
+          this.cerrarModalUsuario();
+        },
+        error: (err) => this.notificationService.showError(err.error?.message || 'Error al actualizar usuario')
+      });
+    } else {
+      this.usuarioService.crearUsuario(payload).subscribe({
+        next: () => {
+          this.notificationService.showSuccess(`Usuario "${this.nuevoUsuario.nombre}" registrado exitosamente`);
+          this.cargarTodo();
+          this.cerrarModalUsuario();
+        },
+        error: (err) => this.notificationService.showError(err.error?.message || 'Error al registrar el nuevo usuario')
       });
     }
   }
