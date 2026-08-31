@@ -19,7 +19,7 @@ public class VentaController {
     private VentaService ventaService;
 
     @PostMapping
-    public ResponseEntity<Venta> registrarVenta(@Valid @RequestBody Venta ventaRequest) {
+    public ResponseEntity<Venta> registrarVenta(@RequestBody Venta ventaRequest) {
         Venta ventaRealizada = ventaService.registrarVenta(ventaRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(ventaRealizada);
     }

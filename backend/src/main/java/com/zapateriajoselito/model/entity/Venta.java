@@ -68,6 +68,14 @@ public class Venta {
     @Column(name = "distrito_envio", nullable = false, length = 100)
     private String distritoEnvio;
 
+    @Column(name = "provincia_envio", nullable = false, length = 100)
+    @Builder.Default
+    private String provinciaEnvio = "Lima";
+
+    @Column(name = "departamento_envio", nullable = false, length = 100)
+    @Builder.Default
+    private String departamentoEnvio = "Lima";
+
     @Transient
     @Builder.Default
     private BigDecimal costoEnvio = BigDecimal.ZERO;
@@ -122,6 +130,12 @@ public class Venta {
 
     public String getDistritoEnvio() { return distritoEnvio; }
     public void setDistritoEnvio(String distritoEnvio) { this.distritoEnvio = distritoEnvio; }
+
+    public String getProvinciaEnvio() { return provinciaEnvio != null ? provinciaEnvio : "Lima"; }
+    public void setProvinciaEnvio(String provinciaEnvio) { this.provinciaEnvio = provinciaEnvio; }
+
+    public String getDepartamentoEnvio() { return departamentoEnvio != null ? departamentoEnvio : "Lima"; }
+    public void setDepartamentoEnvio(String departamentoEnvio) { this.departamentoEnvio = departamentoEnvio; }
 
     public BigDecimal getCostoEnvio() { return costoEnvio; }
     public void setCostoEnvio(BigDecimal costoEnvio) { this.costoEnvio = costoEnvio; }

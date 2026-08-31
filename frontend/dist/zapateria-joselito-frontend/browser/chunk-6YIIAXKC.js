@@ -1,7 +1,4 @@
 import {
-  AuthService
-} from "./chunk-BODVM5WY.js";
-import {
   DefaultValueAccessor,
   FormsModule,
   MinLengthValidator,
@@ -12,6 +9,9 @@ import {
   RequiredValidator,
   ɵNgNoValidate
 } from "./chunk-J5QRST4F.js";
+import {
+  AuthService
+} from "./chunk-BODVM5WY.js";
 import {
   Router,
   RouterLink
@@ -167,4 +167,4 @@ var RegisterComponent = class _RegisterComponent {
 export {
   RegisterComponent
 };
-//# sourceMappingURL=chunk-DFS5ICGI.js.map
+//# sourceMappingURL=chunk-6YIIAXKC.js.map

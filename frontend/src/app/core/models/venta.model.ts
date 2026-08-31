@@ -16,6 +16,8 @@ export interface Venta {
   descuentoMonto?: number;
   direccionEnvio: string;
   distritoEnvio: string;
+  provinciaEnvio?: string;
+  departamentoEnvio?: string;
   costoEnvio: number;
   despachadorAgencia?: string;
   estadoPedido: 'PENDIENTE' | 'PAGADO' | 'DESPACHADO' | 'ENTREGADO' | 'CANCELADO' | string;

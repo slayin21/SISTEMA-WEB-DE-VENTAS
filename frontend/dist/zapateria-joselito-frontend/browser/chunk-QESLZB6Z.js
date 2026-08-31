@@ -5,9 +5,6 @@ import {
   CarritoService
 } from "./chunk-F7US5IUQ.js";
 import {
-  AuthService
-} from "./chunk-BODVM5WY.js";
-import {
   DefaultValueAccessor,
   FormsModule,
   NgControlStatus,
@@ -17,6 +14,9 @@ import {
   SelectControlValueAccessor,
   ɵNgSelectMultipleOption
 } from "./chunk-J5QRST4F.js";
+import {
+  AuthService
+} from "./chunk-BODVM5WY.js";
 import {
   Router,
   RouterLink
@@ -501,7 +501,7 @@ function CheckoutComponent_div_2_Template(rf, ctx) {
     \u0275\u0275advance(2);
     \u0275\u0275property("disabled", ctx_r2.procesando);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", ctx_r2.procesando ? "Procesando Venta y Stock..." : "Confirmar Venta y Generar Boleta", " ");
+    \u0275\u0275textInterpolate1(" ", ctx_r2.procesando ? "Procesando Compra y Boleta..." : "Confirmar Compra y Generar Boleta", " ");
   }
 }
 var CheckoutComponent = class _CheckoutComponent {
@@ -525,17 +525,28 @@ var CheckoutComponent = class _CheckoutComponent {
   }
   ngOnInit() {
     const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      this.idUsuario = currentUser.idUsuario;
-    }
+    this.idUsuario = currentUser && currentUser.idUsuario ? currentUser.idUsuario : 1;
     this.cargarCarrito();
   }
   cargarCarrito() {
     this.cargando = true;
     this.carritoService.obtenerCarrito(this.idUsuario).subscribe({
       next: (data) => {
-        this.carrito = data;
-        this.cargando = false;
+        if ((!data || !data.items || data.items.length === 0) && this.idUsuario !== 1) {
+          this.carritoService.obtenerCarrito(1).subscribe({
+            next: (dataDefault) => {
+              this.carrito = dataDefault;
+              this.cargando = false;
+            },
+            error: () => {
+              this.carrito = data;
+              this.cargando = false;
+            }
+          });
+        } else {
+          this.carrito = data;
+          this.cargando = false;
+        }
       },
       error: (err) => {
         console.error(err);
@@ -566,10 +577,16 @@ var CheckoutComponent = class _CheckoutComponent {
     return this.calcularSubtotal() * 0.18;
   }
   calcularEnvio() {
-    return this.calcularSubtotal() > 200 ? 0 : 15;
+    const sub = this.calcularSubtotal();
+    if (sub === 0)
+      return 0;
+    return sub > 200 ? 0 : 15;
   }
   calcularTotal() {
-    return Math.max(0, this.calcularSubtotal() + this.calcularEnvio() - this.descuentoAplicado);
+    const sub = this.calcularSubtotal();
+    if (sub === 0)
+      return 0;
+    return Math.max(0, sub + this.calcularEnvio() - this.descuentoAplicado);
   }
   confirmarVenta() {
     if (!this.carrito || !this.carrito.items || this.carrito.items.length === 0) {
@@ -600,6 +617,8 @@ var CheckoutComponent = class _CheckoutComponent {
       descuentoMonto: this.descuentoAplicado,
       direccionEnvio: this.direccionEnvio,
       distritoEnvio: this.distritoEnvio,
+      provinciaEnvio: "Lima",
+      departamentoEnvio: "Lima",
       despachadorAgencia: this.despachadorAgencia,
       estadoPedido: "PAGADO",
       detalles
@@ -659,4 +678,4 @@ var CheckoutComponent = class _CheckoutComponent {
 export {
   CheckoutComponent
 };
-//# sourceMappingURL=chunk-BKF7FAMV.js.map
+//# sourceMappingURL=chunk-QESLZB6Z.js.map

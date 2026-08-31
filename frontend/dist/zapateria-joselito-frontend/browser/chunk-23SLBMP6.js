@@ -1,7 +1,4 @@
 import {
-  AuthService
-} from "./chunk-BODVM5WY.js";
-import {
   CheckboxControlValueAccessor,
   DefaultValueAccessor,
   FormsModule,
@@ -12,6 +9,9 @@ import {
   RequiredValidator,
   ɵNgNoValidate
 } from "./chunk-J5QRST4F.js";
+import {
+  AuthService
+} from "./chunk-BODVM5WY.js";
 import {
   CommonModule,
   HttpClient,
@@ -385,4 +385,4 @@ var PerfilComponent = class _PerfilComponent {
 export {
   PerfilComponent
 };
-//# sourceMappingURL=chunk-4P3KFPQ5.js.map
+//# sourceMappingURL=chunk-23SLBMP6.js.map

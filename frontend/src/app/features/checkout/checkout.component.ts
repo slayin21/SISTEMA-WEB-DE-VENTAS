@@ -40,9 +40,7 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      this.idUsuario = currentUser.idUsuario;
-    }
+    this.idUsuario = currentUser && currentUser.idUsuario ? currentUser.idUsuario : 1;
     this.cargarCarrito();
   }
 
@@ -50,8 +48,22 @@ export class CheckoutComponent implements OnInit {
     this.cargando = true;
     this.carritoService.obtenerCarrito(this.idUsuario).subscribe({
       next: (data) => {
-        this.carrito = data;
-        this.cargando = false;
+        if ((!data || !data.items || data.items.length === 0) && this.idUsuario !== 1) {
+          // Si el usuario recién autenticado aún no tiene ítems en su ID de carrito, cargar los ítems del carrito por defecto #1
+          this.carritoService.obtenerCarrito(1).subscribe({
+            next: (dataDefault) => {
+              this.carrito = dataDefault;
+              this.cargando = false;
+            },
+            error: () => {
+              this.carrito = data;
+              this.cargando = false;
+            }
+          });
+        } else {
+          this.carrito = data;
+          this.cargando = false;
+        }
       },
       error: (err) => {
         console.error(err);
@@ -85,11 +97,15 @@ export class CheckoutComponent implements OnInit {
   }
 
   calcularEnvio(): number {
-    return this.calcularSubtotal() > 200 ? 0 : 15;
+    const sub = this.calcularSubtotal();
+    if (sub === 0) return 0;
+    return sub > 200 ? 0 : 15;
   }
 
   calcularTotal(): number {
-    return Math.max(0, this.calcularSubtotal() + this.calcularEnvio() - this.descuentoAplicado);
+    const sub = this.calcularSubtotal();
+    if (sub === 0) return 0;
+    return Math.max(0, sub + this.calcularEnvio() - this.descuentoAplicado);
   }
 
   confirmarVenta(): void {
@@ -126,6 +142,8 @@ export class CheckoutComponent implements OnInit {
       descuentoMonto: this.descuentoAplicado,
       direccionEnvio: this.direccionEnvio,
       distritoEnvio: this.distritoEnvio,
+      provinciaEnvio: 'Lima',
+      departamentoEnvio: 'Lima',
       despachadorAgencia: this.despachadorAgencia,
       estadoPedido: 'PAGADO',
       detalles: detalles

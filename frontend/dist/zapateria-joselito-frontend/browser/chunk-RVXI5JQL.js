@@ -2,6 +2,9 @@ import {
   CarritoService
 } from "./chunk-F7US5IUQ.js";
 import {
+  AuthService
+} from "./chunk-BODVM5WY.js";
+import {
   RouterLink
 } from "./chunk-M3LPOL3F.js";
 import {
@@ -66,9 +69,13 @@ function CarritoComponent_div_4_Template(rf, ctx) {
 function CarritoComponent_div_5_div_7_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 29)(1, "div", 30);
-    \u0275\u0275element(2, "img", 31);
-    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(0, "div", 29)(1, "div", 30)(2, "img", 31);
+    \u0275\u0275listener("error", function CarritoComponent_div_5_div_7_Template_img_error_2_listener($event) {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r1.onErrorImagen($event));
+    });
+    \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(3, "div", 32)(4, "h3");
     \u0275\u0275text(5);
     \u0275\u0275elementEnd();
@@ -107,8 +114,9 @@ function CarritoComponent_div_5_div_7_Template(rf, ctx) {
   }
   if (rf & 2) {
     const item_r4 = ctx.$implicit;
+    const ctx_r1 = \u0275\u0275nextContext(2);
     \u0275\u0275advance(2);
-    \u0275\u0275property("src", (item_r4.variante == null ? null : item_r4.variante.producto == null ? null : item_r4.variante.producto.imagenes == null ? null : item_r4.variante.producto.imagenes[0] == null ? null : item_r4.variante.producto.imagenes[0].urlImagen) || "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=600", \u0275\u0275sanitizeUrl);
+    \u0275\u0275property("src", ctx_r1.obtenerImagenItem(item_r4), \u0275\u0275sanitizeUrl)("alt", (item_r4.variante == null ? null : item_r4.variante.producto == null ? null : item_r4.variante.producto.nombre) || "Calzado");
     \u0275\u0275advance(3);
     \u0275\u0275textInterpolate(item_r4.variante == null ? null : item_r4.variante.producto == null ? null : item_r4.variante.producto.nombre);
     \u0275\u0275advance(4);
@@ -118,11 +126,11 @@ function CarritoComponent_div_5_div_7_Template(rf, ctx) {
     \u0275\u0275advance();
     \u0275\u0275textInterpolate1(" | SKU: ", item_r4.variante == null ? null : item_r4.variante.sku, " ");
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate1("Precio unitario: S/ ", \u0275\u0275pipeBind2(16, 8, item_r4.variante == null ? null : item_r4.variante.precio, "1.2-2"), "");
+    \u0275\u0275textInterpolate1("Precio unitario: S/ ", \u0275\u0275pipeBind2(16, 9, item_r4.variante == null ? null : item_r4.variante.precio, "1.2-2"), "");
     \u0275\u0275advance(4);
     \u0275\u0275textInterpolate1("Cant: ", item_r4.cantidad, "");
     \u0275\u0275advance(3);
-    \u0275\u0275textInterpolate1("S/ ", \u0275\u0275pipeBind2(23, 11, ((item_r4.variante == null ? null : item_r4.variante.precio) || 0) * item_r4.cantidad, "1.2-2"), "");
+    \u0275\u0275textInterpolate1("S/ ", \u0275\u0275pipeBind2(23, 12, ((item_r4.variante == null ? null : item_r4.variante.precio) || 0) * item_r4.cantidad, "1.2-2"), "");
   }
 }
 function CarritoComponent_div_5_span_20_Template(rf, ctx) {
@@ -159,7 +167,7 @@ function CarritoComponent_div_5_Template(rf, ctx) {
     });
     \u0275\u0275text(6, "Vaciar Carrito");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(7, CarritoComponent_div_5_div_7_Template, 28, 14, "div", 17);
+    \u0275\u0275template(7, CarritoComponent_div_5_div_7_Template, 28, 15, "div", 17);
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(8, "div", 18)(9, "h2");
     \u0275\u0275text(10, "Resumen del Pedido");
@@ -208,21 +216,37 @@ function CarritoComponent_div_5_Template(rf, ctx) {
   }
 }
 var CarritoComponent = class _CarritoComponent {
-  constructor(carritoService) {
+  constructor(carritoService, authService) {
     this.carritoService = carritoService;
+    this.authService = authService;
     this.carrito = null;
     this.cargando = true;
     this.idUsuario = 1;
   }
   ngOnInit() {
+    const user = this.authService.getCurrentUser();
+    this.idUsuario = user && user.idUsuario ? user.idUsuario : 1;
     this.cargarCarrito();
   }
   cargarCarrito() {
     this.cargando = true;
     this.carritoService.obtenerCarrito(this.idUsuario).subscribe({
       next: (data) => {
-        this.carrito = data;
-        this.cargando = false;
+        if ((!data || !data.items || data.items.length === 0) && this.idUsuario !== 1) {
+          this.carritoService.obtenerCarrito(1).subscribe({
+            next: (dataDefault) => {
+              this.carrito = dataDefault;
+              this.cargando = false;
+            },
+            error: () => {
+              this.carrito = data;
+              this.cargando = false;
+            }
+          });
+        } else {
+          this.carrito = data;
+          this.cargando = false;
+        }
       },
       error: (err) => {
         console.error(err);
@@ -242,6 +266,21 @@ var CarritoComponent = class _CarritoComponent {
       next: () => this.carrito = null
     });
   }
+  obtenerImagenItem(item) {
+    const fallback = "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=600";
+    if (!item.variante || !item.variante.producto)
+      return fallback;
+    const prod = item.variante.producto;
+    if (prod.imagenes && prod.imagenes.length > 0) {
+      const principal = prod.imagenes.find((i) => i.esPrincipal);
+      const url = principal ? principal.urlImagen : prod.imagenes[0].urlImagen;
+      return url || fallback;
+    }
+    return fallback;
+  }
+  onErrorImagen(event) {
+    event.target.src = "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=600";
+  }
   calcularSubtotal() {
     if (!this.carrito || !this.carrito.items)
       return 0;
@@ -258,11 +297,11 @@ var CarritoComponent = class _CarritoComponent {
   }
   static {
     this.\u0275fac = function CarritoComponent_Factory(t) {
-      return new (t || _CarritoComponent)(\u0275\u0275directiveInject(CarritoService));
+      return new (t || _CarritoComponent)(\u0275\u0275directiveInject(CarritoService), \u0275\u0275directiveInject(AuthService));
     };
   }
   static {
-    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _CarritoComponent, selectors: [["app-carrito"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 6, vars: 3, consts: [[1, "cart-container"], [1, "cart-title"], ["class", "loading-state", 4, "ngIf"], ["class", "empty-cart", 4, "ngIf"], ["class", "cart-grid", 4, "ngIf"], [1, "loading-state"], [1, "spinner"], [1, "empty-cart"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "1.5"], ["cx", "9", "cy", "21", "r", "1"], ["cx", "20", "cy", "21", "r", "1"], ["d", "M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"], ["routerLink", "/catalogo", 1, "btn-primary"], [1, "cart-grid"], [1, "cart-items-section"], [1, "section-header"], [1, "btn-clear", 3, "click"], ["class", "cart-item-card", 4, "ngFor", "ngForOf"], [1, "cart-summary-card"], [1, "summary-line"], ["class", "free-shipping", 4, "ngIf"], [4, "ngIf"], [1, "divider"], [1, "summary-line", "total-line"], [1, "total-amount"], ["routerLink", "/checkout", 1, "btn-checkout"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2"], ["x1", "5", "y1", "12", "x2", "19", "y2", "12"], ["points", "12 5 19 12 12 19"], [1, "cart-item-card"], [1, "item-img"], [3, "src"], [1, "item-details"], [1, "specs"], [1, "unit-price"], [1, "item-qty"], [1, "item-total"], ["title", "Eliminar del carrito", 1, "btn-remove", 3, "click"], ["points", "3 6 5 6 21 6"], ["d", "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"], [1, "free-shipping"]], template: function CarritoComponent_Template(rf, ctx) {
+    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _CarritoComponent, selectors: [["app-carrito"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 6, vars: 3, consts: [[1, "cart-container"], [1, "cart-title"], ["class", "loading-state", 4, "ngIf"], ["class", "empty-cart", 4, "ngIf"], ["class", "cart-grid", 4, "ngIf"], [1, "loading-state"], [1, "spinner"], [1, "empty-cart"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "1.5"], ["cx", "9", "cy", "21", "r", "1"], ["cx", "20", "cy", "21", "r", "1"], ["d", "M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"], ["routerLink", "/catalogo", 1, "btn-primary"], [1, "cart-grid"], [1, "cart-items-section"], [1, "section-header"], [1, "btn-clear", 3, "click"], ["class", "cart-item-card", 4, "ngFor", "ngForOf"], [1, "cart-summary-card"], [1, "summary-line"], ["class", "free-shipping", 4, "ngIf"], [4, "ngIf"], [1, "divider"], [1, "summary-line", "total-line"], [1, "total-amount"], ["routerLink", "/checkout", 1, "btn-checkout"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2"], ["x1", "5", "y1", "12", "x2", "19", "y2", "12"], ["points", "12 5 19 12 12 19"], [1, "cart-item-card"], [1, "item-img"], [3, "error", "src", "alt"], [1, "item-details"], [1, "specs"], [1, "unit-price"], [1, "item-qty"], [1, "item-total"], ["title", "Eliminar del carrito", 1, "btn-remove", 3, "click"], ["points", "3 6 5 6 21 6"], ["d", "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"], [1, "free-shipping"]], template: function CarritoComponent_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "h1", 1);
         \u0275\u0275text(2, "Tu Carrito de Compras");
@@ -282,9 +321,9 @@ var CarritoComponent = class _CarritoComponent {
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CarritoComponent, { className: "CarritoComponent", filePath: "src\\app\\features\\cart\\carrito.component.ts", lineNumber: 14 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CarritoComponent, { className: "CarritoComponent", filePath: "src\\app\\features\\cart\\carrito.component.ts", lineNumber: 15 });
 })();
 export {
   CarritoComponent
 };
-//# sourceMappingURL=chunk-IETP6I3M.js.map
+//# sourceMappingURL=chunk-RVXI5JQL.js.map

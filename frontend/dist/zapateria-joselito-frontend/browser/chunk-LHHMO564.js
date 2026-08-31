@@ -1,7 +1,4 @@
 import {
-  AuthService
-} from "./chunk-BODVM5WY.js";
-import {
   DefaultValueAccessor,
   FormsModule,
   MinLengthValidator,
@@ -12,6 +9,9 @@ import {
   RequiredValidator,
   ɵNgNoValidate
 } from "./chunk-J5QRST4F.js";
+import {
+  AuthService
+} from "./chunk-BODVM5WY.js";
 import {
   Router,
   RouterLink
@@ -236,4 +236,4 @@ var ForgotPasswordComponent = class _ForgotPasswordComponent {
 export {
   ForgotPasswordComponent
 };
-//# sourceMappingURL=chunk-PCGCIBVS.js.map
+//# sourceMappingURL=chunk-LHHMO564.js.map

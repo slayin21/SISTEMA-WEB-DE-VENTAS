@@ -30,7 +30,7 @@
 
       <div class="cart-item-card" *ngFor="let item of carrito.items">
         <div class="item-img">
-          <img [src]="item.variante?.producto?.imagenes?.[0]?.urlImagen || 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=600'" />
+          <img [src]="obtenerImagenItem(item)" [alt]="item.variante?.producto?.nombre || 'Calzado'" (error)="onErrorImagen($event)" />
         </div>
 
         <div class="item-details">

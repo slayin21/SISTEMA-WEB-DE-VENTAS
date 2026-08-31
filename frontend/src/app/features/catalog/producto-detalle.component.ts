@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductoService } from '../../core/services/producto.service';
 import { CarritoService } from '../../core/services/carrito.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Producto, ProductoVariante } from '../../core/models';
 
 @Component({
@@ -27,7 +28,8 @@ export class ProductoDetalleComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productoService: ProductoService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -77,8 +79,8 @@ export class ProductoDetalleComponent implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    // Simulando idUsuario = 1 (Usuario por defecto)
-    const idUsuario = 1;
+    const user = this.authService.getCurrentUser();
+    const idUsuario = user && user.idUsuario ? user.idUsuario : 1;
 
     this.carritoService.agregarItem(idUsuario, this.varianteSeleccionada.idVariante, this.cantidad).subscribe({
       next: () => {

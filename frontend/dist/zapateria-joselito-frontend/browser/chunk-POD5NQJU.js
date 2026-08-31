@@ -1,7 +1,4 @@
 import {
-  AuthService
-} from "./chunk-BODVM5WY.js";
-import {
   DefaultValueAccessor,
   FormsModule,
   NgControlStatus,
@@ -11,6 +8,9 @@ import {
   RequiredValidator,
   ɵNgNoValidate
 } from "./chunk-J5QRST4F.js";
+import {
+  AuthService
+} from "./chunk-BODVM5WY.js";
 import {
   Router,
   RouterLink
@@ -155,4 +155,4 @@ var LoginComponent = class _LoginComponent {
 export {
   LoginComponent
 };
-//# sourceMappingURL=chunk-TIPSFPHR.js.map
+//# sourceMappingURL=chunk-POD5NQJU.js.map

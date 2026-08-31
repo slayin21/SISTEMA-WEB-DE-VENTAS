@@ -27,9 +27,9 @@ public class ProductoVariante {
     @Column(name = "id_variantes")
     private Long idVariante;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_productos", nullable = false)
-    @JsonIgnoreProperties({"variantes", "imagenes", "resenas"})
+    @JsonIgnoreProperties({"variantes", "resenas"})
     @NotNull(message = "El producto padre es obligatorio")
     private Producto producto;
 

@@ -83,31 +83,31 @@ var routes = [
   },
   {
     path: "producto/:id",
-    loadComponent: () => import("./chunk-TOZUDJXV.js").then((m) => m.ProductoDetalleComponent)
+    loadComponent: () => import("./chunk-FJ4NML64.js").then((m) => m.ProductoDetalleComponent)
   },
   {
     path: "carrito",
-    loadComponent: () => import("./chunk-IETP6I3M.js").then((m) => m.CarritoComponent)
+    loadComponent: () => import("./chunk-RVXI5JQL.js").then((m) => m.CarritoComponent)
   },
   {
     path: "checkout",
-    loadComponent: () => import("./chunk-BKF7FAMV.js").then((m) => m.CheckoutComponent)
+    loadComponent: () => import("./chunk-QESLZB6Z.js").then((m) => m.CheckoutComponent)
   },
   {
     path: "auth/login",
-    loadComponent: () => import("./chunk-TIPSFPHR.js").then((m) => m.LoginComponent)
+    loadComponent: () => import("./chunk-POD5NQJU.js").then((m) => m.LoginComponent)
   },
   {
     path: "auth/register",
-    loadComponent: () => import("./chunk-DFS5ICGI.js").then((m) => m.RegisterComponent)
+    loadComponent: () => import("./chunk-6YIIAXKC.js").then((m) => m.RegisterComponent)
   },
   {
     path: "auth/forgot-password",
-    loadComponent: () => import("./chunk-PCGCIBVS.js").then((m) => m.ForgotPasswordComponent)
+    loadComponent: () => import("./chunk-LHHMO564.js").then((m) => m.ForgotPasswordComponent)
   },
   {
     path: "perfil",
-    loadComponent: () => import("./chunk-4P3KFPQ5.js").then((m) => m.PerfilComponent),
+    loadComponent: () => import("./chunk-23SLBMP6.js").then((m) => m.PerfilComponent),
     canActivate: [authGuard]
   },
   {

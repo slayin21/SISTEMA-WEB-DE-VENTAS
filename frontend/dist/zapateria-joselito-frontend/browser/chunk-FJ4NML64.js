@@ -8,6 +8,9 @@ import {
   FormsModule
 } from "./chunk-J5QRST4F.js";
 import {
+  AuthService
+} from "./chunk-BODVM5WY.js";
+import {
   ActivatedRoute,
   Router,
   RouterLink
@@ -286,11 +289,12 @@ function ProductoDetalleComponent_div_6_Template(rf, ctx) {
   }
 }
 var ProductoDetalleComponent = class _ProductoDetalleComponent {
-  constructor(route, router, productoService, carritoService) {
+  constructor(route, router, productoService, carritoService, authService) {
     this.route = route;
     this.router = router;
     this.productoService = productoService;
     this.carritoService = carritoService;
+    this.authService = authService;
     this.producto = null;
     this.varianteSeleccionada = null;
     this.imagenSeleccionada = "";
@@ -340,7 +344,8 @@ var ProductoDetalleComponent = class _ProductoDetalleComponent {
     this.agregando = true;
     this.mensajeExito = "";
     this.mensajeError = "";
-    const idUsuario = 1;
+    const user = this.authService.getCurrentUser();
+    const idUsuario = user && user.idUsuario ? user.idUsuario : 1;
     this.carritoService.agregarItem(idUsuario, this.varianteSeleccionada.idVariante, this.cantidad).subscribe({
       next: () => {
         this.agregando = false;
@@ -355,7 +360,7 @@ var ProductoDetalleComponent = class _ProductoDetalleComponent {
   }
   static {
     this.\u0275fac = function ProductoDetalleComponent_Factory(t) {
-      return new (t || _ProductoDetalleComponent)(\u0275\u0275directiveInject(ActivatedRoute), \u0275\u0275directiveInject(Router), \u0275\u0275directiveInject(ProductoService), \u0275\u0275directiveInject(CarritoService));
+      return new (t || _ProductoDetalleComponent)(\u0275\u0275directiveInject(ActivatedRoute), \u0275\u0275directiveInject(Router), \u0275\u0275directiveInject(ProductoService), \u0275\u0275directiveInject(CarritoService), \u0275\u0275directiveInject(AuthService));
     };
   }
   static {
@@ -381,9 +386,9 @@ var ProductoDetalleComponent = class _ProductoDetalleComponent {
   }
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(ProductoDetalleComponent, { className: "ProductoDetalleComponent", filePath: "src\\app\\features\\catalog\\producto-detalle.component.ts", lineNumber: 16 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(ProductoDetalleComponent, { className: "ProductoDetalleComponent", filePath: "src\\app\\features\\catalog\\producto-detalle.component.ts", lineNumber: 17 });
 })();
 export {
   ProductoDetalleComponent
 };
-//# sourceMappingURL=chunk-TOZUDJXV.js.map
+//# sourceMappingURL=chunk-FJ4NML64.js.map

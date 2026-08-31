@@ -80,6 +80,8 @@ public class VentaService {
         venta.setDescuentoMonto(ventaRequest.getDescuentoMonto() != null ? ventaRequest.getDescuentoMonto() : BigDecimal.ZERO);
         venta.setDireccionEnvio(ventaRequest.getDireccionEnvio());
         venta.setDistritoEnvio(ventaRequest.getDistritoEnvio());
+        venta.setProvinciaEnvio(ventaRequest.getProvinciaEnvio() != null ? ventaRequest.getProvinciaEnvio() : "Lima");
+        venta.setDepartamentoEnvio(ventaRequest.getDepartamentoEnvio() != null ? ventaRequest.getDepartamentoEnvio() : "Lima");
         venta.setCostoEnvio(ventaRequest.getCostoEnvio());
         venta.setDespachadorAgencia(ventaRequest.getDespachadorAgencia());
         venta.setEstadoPedido("PAGADO");
@@ -117,7 +119,8 @@ public class VentaService {
             InventarioMovimiento movimiento = new InventarioMovimiento();
             movimiento.setVariante(variante);
             movimiento.setVenta(ventaGuardada);
-            movimiento.setTipoMovimiento("SALIDA_VENTA");
+            movimiento.setTipoMovimiento("SALIDA");
+            movimiento.setOrigenTipo("VENTA");
             movimiento.setCantidad(itemReq.getCantidad());
             movimiento.setStockAnterior(stockAnterior);
             movimiento.setStockActual(nuevoStock);

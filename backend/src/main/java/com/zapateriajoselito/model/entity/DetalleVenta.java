@@ -47,9 +47,7 @@ public class DetalleVenta {
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
-    @NotNull(message = "El subtotal es obligatorio")
-    @DecimalMin(value = "0.0", inclusive = false, message = "El subtotal debe ser mayor a 0")
-    @Column(name = "subtotal", nullable = false, precision = 12, scale = 2)
+    @Column(name = "subtotal", insertable = false, updatable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 
     @OneToMany(mappedBy = "detalleVenta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

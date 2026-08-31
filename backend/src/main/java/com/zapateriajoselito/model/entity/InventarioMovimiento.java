@@ -43,6 +43,10 @@ public class InventarioMovimiento {
     @Column(name = "tipo_movimiento", nullable = false, length = 30)
     private String tipoMovimiento;
 
+    @Column(name = "origen_tipo", nullable = false, length = 50)
+    @Builder.Default
+    private String origenTipo = "VENTA";
+
     @NotNull(message = "La cantidad es obligatoria")
     @Min(value = 1, message = "La cantidad debe ser mayor o igual a 1")
     @Column(name = "cantidad", nullable = false)
@@ -79,6 +83,9 @@ public class InventarioMovimiento {
 
     public String getTipoMovimiento() { return tipoMovimiento; }
     public void setTipoMovimiento(String tipoMovimiento) { this.tipoMovimiento = tipoMovimiento; }
+
+    public String getOrigenTipo() { return origenTipo != null ? origenTipo : "VENTA"; }
+    public void setOrigenTipo(String origenTipo) { this.origenTipo = origenTipo; }
 
     public Integer getCantidad() { return cantidad; }
     public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
